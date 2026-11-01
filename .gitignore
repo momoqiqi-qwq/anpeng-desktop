@@ -1,0 +1,15 @@
+# Build outputs and local caches
+source/desktop/bin/
+source/desktop/obj/
+verification/OptimizationChecks/bin/
+verification/OptimizationChecks/obj/
+verification/OptimizationChecks/artifacts/
+
+# Existing runtime bundles are published separately as release assets.
+安棚桌面端/
+output/
+
+# Local/editor/system files
+*.user
+.vs/
+.DS_Store

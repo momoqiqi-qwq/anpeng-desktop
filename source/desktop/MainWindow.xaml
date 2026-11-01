@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Window
+    x:Class="Anpeng.Desktop.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Anpeng.Desktop"
+    xmlns:controls="using:Anpeng.Desktop.Controls"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="RootGrid" Background="{ThemeResource BgAltBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="56" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- 标题栏底：品牌蓝铺底（契约 3.1 #14538C）。非打包应用 ExtendsContentIntoTitleBar
+             之后 AppWindowTitleBar 的配色不再生效，底色必须由 XAML 自己画。 -->
+        <Border Grid.Row="0" Background="{ThemeResource BrandBlueBrush}" />
+
+        <!-- 标题栏（契约 5 节：Window + WinUI 3 TitleBar + NavigationView + Frame）。
+             TitleBar 控件只承担「窗口拖动区 + 系统按钮占位」：实测 WinUI 3 的 TitleBar
+             会给自己的 Content 预留一大段左侧内边距（本窗口约 335 px 空白），把标志与标题
+             塞进 TitleBar.Content 会让它们落到窗口中部，与级别徽标挤在一起。因此品牌元素
+             改由它上方的 ChromeOverlay 绘制，TitleBar 本身不带任何 Content。 -->
+        <TitleBar
+            x:Name="AppTitleBar"
+            Grid.Row="0"
+            IsBackButtonVisible="False"
+            IsPaneToggleButtonVisible="False"
+            PaneToggleRequested="AppTitleBar_PaneToggleRequested"
+            BackRequested="AppTitleBar_BackRequested" />
+
+        <!-- 品牌条：左侧 = 安棚方版标志（第 2 节「反白版」几何，矢量 Path，
+                          含火苗 #EE5A2E 与水滴 #6FCBEE）+ 应用名/副标题；
+                    中部 = 留白，作窗口拖动透气区；
+                    右侧 = 在线节点胶囊 / 采样状态胶囊 / 全场最高级别徽标。
+             右侧留 150 px 给系统最小化/最大化/关闭按钮；三列显式分列、中部吃满剩余宽度，
+             保证胶囊、级别徽标与状态文字三者互不重叠。IsHitTestVisible=False 保证窗口拖动
+             不被遮挡（拖动区由 SetTitleBar(AppTitleBar) 提供）。 -->
+        <Grid x:Name="ChromeOverlay" Grid.Row="0" IsHitTestVisible="False" Margin="12,0,150,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <!-- 深底用反白版标志（契约 2 节）：底衬透明、棚保留白色描边、火苗 #EE5A2E、水滴 #6FCBEE -->
+                        <controls:AnpengLogo x:Name="ChromeLogo" DisplaySize="52" Inverse="True" VerticalAlignment="Center" />
+                        <StackPanel Orientation="Vertical" Spacing="1" VerticalAlignment="Center">
+                            <TextBlock Text="安棚" FontSize="15" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="草料棚火灾预警监控台 · ANPENG" FontSize="10.5"
+                                       Foreground="{ThemeResource BrandBlueSoftBrush}" />
+                        </StackPanel>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                        <Border x:Name="OnlineChip" Background="{ThemeResource BrandBlueSoftBrush}" CornerRadius="12" Padding="10,4,10,4">
+                            <TextBlock x:Name="OnlineChipText" Text="节点 --/-- 在线" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{ThemeResource BrandBlueTextBrush}" />
+                        </Border>
+                        <Border x:Name="RunStateChip" Background="#33000000" CornerRadius="12" Padding="10,4,10,4">
+                            <TextBlock x:Name="RunStateText" Text="本地运行中" FontSize="12"
+                                       Foreground="{ThemeResource BrandBlueSoftBrush}" />
+                        </Border>
+                        <Border x:Name="LevelChip" Background="{ThemeResource LevelNormalSoftBrush}" CornerRadius="12" Padding="10,4,10,4">
+                            <TextBlock x:Name="LevelChipText" Text="全场正常" FontSize="12" FontWeight="SemiBold"
+                                       Foreground="{ThemeResource LevelNormalBrush}" />
+                        </Border>
+                    </StackPanel>
+        </Grid>
+
+        <!-- 外壳：NavigationView + Frame -->
+        <NavigationView
+            x:Name="NavView"
+            Grid.Row="1"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            IsTitleBarAutoPaddingEnabled="False"
+            PaneDisplayMode="Left"
+            OpenPaneLength="220"
+            SelectionChanged="NavView_SelectionChanged">
+
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="总览" Tag="overview">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE80F;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="实时监测" Tag="realtime">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D9;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="报警记录" Tag="alarms">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xEA39;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="喷淋控制" Tag="sprinkler">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7A7;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="设备管理" Tag="devices">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE7BA;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="报表统计" Tag="reports">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D2;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="设置" Tag="settings">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE713;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+                <NavigationViewItem Content="判据自检" Tag="debug">
+                    <NavigationViewItem.Icon>
+                        <FontIcon Glyph="&#xE9D5;" />
+                    </NavigationViewItem.Icon>
+                </NavigationViewItem>
+            </NavigationView.MenuItems>
+
+            <NavigationView.PaneFooter>
+                <Border Margin="8,8,8,12" Padding="12,8" CornerRadius="8" Background="{ThemeResource BrandBlueSoftBrush}">
+                    <StackPanel Orientation="Vertical" Spacing="2">
+                        <TextBlock Text="本地运行中" FontSize="12" FontWeight="SemiBold" Foreground="{ThemeResource BrandBlueTextBrush}" />
+                        <TextBlock Text="检测、判断、报警、喷淋全部本地闭环，断网不影响"
+                                   FontSize="11" TextWrapping="Wrap" Foreground="{ThemeResource MutedBrush}" />
+                    </StackPanel>
+                </Border>
+            </NavigationView.PaneFooter>
+
+            <Frame x:Name="ContentFrame" />
+        </NavigationView>
+    </Grid>
+</Window>

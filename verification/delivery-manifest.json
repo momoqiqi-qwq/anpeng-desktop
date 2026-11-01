@@ -1,0 +1,59 @@
+{
+  "changedFiles": [
+    {
+      "file": "source/desktop/Data/DataRepository.cs",
+      "originalSha256": "fbffcb692f0f9bb99680512e93d338a4da17f803df2e2d5b5a8a2bde4679f518",
+      "optimizedSha256": "db63d96f52ab76904dfe3096259cb8309e6057e9ac38b3179579fa120f829848"
+    },
+    {
+      "file": "source/desktop/Pages/RealtimePage.xaml.cs",
+      "originalSha256": "bca4862be1cecfd2f7c7f9fb70b2d0ad297e5166103b99c148389627be5654e9",
+      "optimizedSha256": "07efabb0dfed14cd3ba9e649294edc3dc03f2b8c0a168f317a8e98ff0695b7cf"
+    },
+    {
+      "file": "source/desktop/Pages/ReportsPage.xaml.cs",
+      "originalSha256": "e086014d3b56913e06aca40cd9b2ae3a84df41314983508d4c1f0127ebde76b6",
+      "optimizedSha256": "f27e1323b38b8b528ce7be876874f61728bfe2bbb5e3aab906a2d44e6b0b0261"
+    },
+    {
+      "file": "source/desktop/Services/MonitoringService.cs",
+      "originalSha256": "3ea344cfa2146323566b984dcacb5dcf649a71406c5738657d2ca2dadcf6d5c1",
+      "optimizedSha256": "8f0956803c6d4ab89c3604d53627caed3192b24c25ace57dd10254ae52887f2c"
+    },
+    {
+      "file": "source/desktop/Services/ReportService.cs",
+      "originalSha256": "49f90325cadcea6f55883a039e3f4af56c80542c548d83d8cdbe01d8093854ff",
+      "optimizedSha256": "86f88f374ed91ee90ca91685eb1507cc10b9463e7e906aa4f4f1811d7e7990be"
+    }
+  ],
+  "outputs": [
+    {
+      "file": "安棚桌面端/Anpeng.Desktop.dll",
+      "bytes": 464384,
+      "sha256": "90faf2e9a96c2bac8a43c1b123c05ff7685e77046b3934c51d111c21e3ea510e"
+    },
+    {
+      "file": "output/安棚桌面端-优化版/Anpeng.Desktop.dll",
+      "bytes": 466432,
+      "sha256": "5a1a253295692dc82eb190e39e94c4fea3df498e4d436c58b75c0f90d202476c"
+    },
+    {
+      "file": "output/安棚桌面端-优化版/安棚 1.0.0.exe",
+      "bytes": 319488,
+      "sha256": "f2f0306570bd8bdaf51fdf8a954f257afd0ab71acb50e7c65283fb4ee7aa7a48"
+    },
+    {
+      "file": "output/安棚桌面端-优化版/Anpeng.Desktop.pri",
+      "bytes": 1379464,
+      "sha256": "5b6c77b1a6cedf0159e4eb5a60155bb7a4e8caa411955c3ece45f8b25e6c8e06"
+    },
+    {
+      "file": "output/安棚桌面端-优化版/安棚 1.0.0.pri",
+      "bytes": 1379464,
+      "sha256": "5b6c77b1a6cedf0159e4eb5a60155bb7a4e8caa411955c3ece45f8b25e6c8e06"
+    }
+  ],
+  "regressionPassed": true,
+  "assertions": 1100,
+  "visualVerification": "Blocked by desktop automation window identity mismatch; responsive top-level window verified via process metadata."
+}

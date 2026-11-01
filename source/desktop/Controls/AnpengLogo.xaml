@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  安棚主标志 A（矢量复刻，几何照抄 APP-SPEC 第 2 节，512×512 画布）
+  圆角方底 rect 512x512 rx=116 填充 #14538C
+  棚     stroke #FFFFFF 34 round，fill none：M92 262 L256 118 L420 262 / M92 262 L92 418 / M420 262 L420 418
+  火苗   fill #EE5A2E：M262 172 C296 220 322 290 322 352 C322 392 294 418 256 418 C218 418 190 392 190 352
+                      C190 320 198 296 212 274 C220 290 232 296 244 296 C254 256 260 208 262 172 Z
+  水滴   fill #6FCBEE：M256 326 C256 326 226 352 226 368 A30 30 0 0 0 286 368 C286 352 256 326 256 326 Z
+  标志本体 92..420 落在 512 画布内，安全边距 92 px；使用方保证显示尺寸 ≥ 32 px。
+  禁止拉伸、改色、拆分、加渐变/阴影/描边/发光。
+-->
+<UserControl
+    x:Class="Anpeng.Desktop.Controls.AnpengLogo"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IsTabStop="False">
+
+    <Viewbox x:Name="RootScale" Stretch="Uniform" HorizontalAlignment="Left" VerticalAlignment="Top">
+        <Grid Width="512" Height="512">
+            <!-- 圆角方底：Border.CornerRadius 116 等价于规格里的 rect rx=116 -->
+            <Border x:Name="Backplate" Width="512" Height="512" CornerRadius="116" />
+
+            <!-- 棚：白描边、空心 -->
+            <Path x:Name="Roof" Data="M92 262 L256 118 L420 262" StrokeLineJoin="Round" Fill="Transparent" />
+            <Path x:Name="WallLeft" Data="M92 262 L92 418" StrokeLineJoin="Round" Fill="Transparent" />
+            <Path x:Name="WallRight" Data="M420 262 L420 418" StrokeLineJoin="Round" Fill="Transparent" />
+
+            <!-- 火苗 -->
+            <Path x:Name="Flame"
+                  Data="M262 172 C296 220 322 290 322 352 C322 392 294 418 256 418 C218 418 190 392 190 352 C190 320 198 296 212 274 C220 290 232 296 244 296 C254 256 260 208 262 172 Z" />
+
+            <!-- 水滴（位于火苗内部） -->
+            <Path x:Name="DropShape"
+                  Data="M256 326 C256 326 226 352 226 368 A30 30 0 0 0 286 368 C286 352 256 326 256 326 Z" />
+        </Grid>
+    </Viewbox>
+</UserControl>

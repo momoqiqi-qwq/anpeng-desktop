@@ -1,0 +1,59 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows10.0.26100.0</TargetFramework>
+    <TargetPlatformMinVersion>10.0.19041.0</TargetPlatformMinVersion>
+    <RootNamespace>Anpeng.Desktop</RootNamespace>
+    <AssemblyName>Anpeng.Desktop</AssemblyName>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <ApplicationIcon>Assets\AppIcon.ico</ApplicationIcon>
+    <Platforms>x64</Platforms>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <UseWinUI>true</UseWinUI>
+    <WinUISDKReferences>false</WinUISDKReferences>
+    <EnableMsixTooling>false</EnableMsixTooling>
+    <WindowsPackageType>None</WindowsPackageType>
+    <WindowsAppSDKSelfContained>true</WindowsAppSDKSelfContained>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <EnableDefaultPRIResourceItems>false</EnableDefaultPRIResourceItems>
+    <Version>1.0.0</Version>
+    <InformationalVersion>1.0.0</InformationalVersion>
+    <!-- NU1900：离线环境下取包漏洞数据失败。属环境噪声、不是代码问题，
+         但会污染「0 警告」的验收口径，故显式静音。 -->
+    <NoWarn>$(NoWarn);NU1900</NoWarn>
+    <AssemblyTitle>安棚草料棚火灾预警监控台</AssemblyTitle>
+    <Product>安棚</Product>
+    <Company>安棚智慧消防科技有限责任公司</Company>
+    <Copyright>安棚智慧消防科技有限责任公司</Copyright>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.WindowsAppSDK" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Windows.SDK.BuildTools" Version="10.0.26100.7705" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Assets\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <!--
+    非打包 WinUI 3 应用在运行期靠 <AssemblyName>.pri 解析 ms-appx:/// 资源
+    （Styles/AnpengTokens.xaml、Assets/AppIcon.ico 等）。因为本工程设了
+    EnableDefaultPRIResourceItems=false，publish 不会自动把它带进输出目录，
+    结果发布版启动即 0xC000027B（STATUS_STOWED_EXCEPTION）。
+    这里在 Publish 之后把 bin 里生成好的 pri 补进发布目录。
+  -->
+  <Target Name="CopyPriToPublish" AfterTargets="Publish">
+    <ItemGroup>
+      <_AnpengPri Include="$(OutDir)$(AssemblyName).pri" />
+    </ItemGroup>
+    <Copy SourceFiles="@(_AnpengPri)"
+          DestinationFolder="$(PublishDir)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('%(FullPath)')" />
+    <Message Importance="high" Text="安棚：已把 $(AssemblyName).pri 补入发布目录 $(PublishDir)" />
+  </Target>
+</Project>

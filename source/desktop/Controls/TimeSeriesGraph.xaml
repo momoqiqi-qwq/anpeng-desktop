@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  双曲线趋势图：烟雾（ppm）与温度（°C）各自归一化到自身量程叠加绘制，
+  并按 APP-SPEC 4.4 画出预警阈值参考线与确认火警参考线（即参考带边界）。
+  纯 XAML 图形，不引入任何图表库，离线可用。
+-->
+<UserControl
+    x:Class="Anpeng.Desktop.Controls.TimeSeriesGraph"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    IsTabStop="False">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- 图例 -->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="16" Margin="0,0,0,8">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Rectangle Width="14" Height="4" RadiusX="2" RadiusY="2" Fill="{ThemeResource BrandDropBrush}" VerticalAlignment="Center" />
+                <TextBlock Text="烟雾浓度 (ppm)" Style="{StaticResource AnpengCaptionStyle}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Rectangle Width="14" Height="4" RadiusX="2" RadiusY="2" Fill="{ThemeResource BrandFireBrush}" VerticalAlignment="Center" />
+                <TextBlock Text="棚内温度 (°C)" Style="{StaticResource AnpengCaptionStyle}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Rectangle Width="14" Height="4" RadiusX="2" RadiusY="2" Fill="{ThemeResource LevelNoticeBrush}" Opacity="0.55" VerticalAlignment="Center" />
+                <TextBlock Text="预警阈值参考线" Style="{StaticResource AnpengCaptionStyle}" />
+            </StackPanel>
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Rectangle Width="14" Height="4" RadiusX="2" RadiusY="2" Fill="{ThemeResource LevelAlarmBrush}" Opacity="0.65" VerticalAlignment="Center" />
+                <TextBlock Text="确认火警阈值参考线" Style="{StaticResource AnpengCaptionStyle}" />
+            </StackPanel>
+        </StackPanel>
+
+        <!-- 绘图区 -->
+        <Border x:Name="PlotHost" Grid.Row="1" Background="{ThemeResource BrandBlueSoftBrush}" CornerRadius="8" Padding="1">
+            <Canvas x:Name="Plot" />
+        </Border>
+
+        <!-- 量程说明 -->
+        <Grid Grid.Row="2" Margin="0,6,0,0">
+            <TextBlock x:Name="SmokeRangeText" HorizontalAlignment="Left" Style="{StaticResource AnpengCaptionStyle}" />
+            <TextBlock x:Name="TempRangeText" HorizontalAlignment="Right" Style="{StaticResource AnpengCaptionStyle}" />
+        </Grid>
+    </Grid>
+</UserControl>

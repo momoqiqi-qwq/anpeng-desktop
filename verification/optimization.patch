@@ -1,0 +1,99 @@
+--- a/desktop/Data/DataRepository.cs
++++ b/desktop/Data/DataRepository.cs
+@@ -133,7 +133,12 @@
+         try
+         {
+             var tmp = path + ".tmp";
+-            File.WriteAllText(tmp, JsonSerializer.Serialize(value, Options));
++            // 直接写入 UTF-8 流，避免数据量增大时分配完整的 JSON 字符串。
++            // 必须先关闭临时文件，再替换目标文件（Windows 不允许移动仍打开的文件）。
++            using (var stream = new FileStream(tmp, FileMode.Create, FileAccess.Write, FileShare.None))
++            {
++                JsonSerializer.Serialize(stream, value, Options);
++            }
+             File.Move(tmp, path, overwrite: true);
+         }
+         catch (Exception ex)
+--- a/desktop/Pages/RealtimePage.xaml.cs
++++ b/desktop/Pages/RealtimePage.xaml.cs
+@@ -82,7 +82,6 @@
+             var idx = combo.SelectedIndex;
+             if (idx < 0 || idx >= barns.Count) return;
+             RuntimeState.Monitor.SetActiveBarn(barns[idx].Id);
+-            Rebuild();
+         };
+         pickerRow.Children.Add(combo);
+         pickerRow.Children.Add(UiKit.Pill(AlarmLevelInfo.Name(level), level, solid: level == AlarmLevel.Alarm));
+--- a/desktop/Pages/ReportsPage.xaml.cs
++++ b/desktop/Pages/ReportsPage.xaml.cs
+@@ -50,6 +50,7 @@
+         var byLevel = ReportService.ByLevel(alarms);
+         var byBarn = ReportService.ByBarn(alarms);
+         var trend = ReportService.SprinklerTrend(data.Sprinklers, _range, now);
++        var readings = ReportService.SummarizeReadings(data.Readings, _range, now);
+ 
+         Host.Children.Clear();
+ 
+@@ -78,9 +79,9 @@
+             UiKit.Level(AlarmLevel.Alarm));
+         var s1 = UiKit.Stat("喷淋次数", $"{sprinklers.Count} 次",
+             $"自动联动 {sprinklers.Count(s => s.Mode == "自动")} 次", UiKit.Fire);
+-        var s2 = UiKit.Stat("平均温度", $"{ReportService.AverageTemp(data.Readings, _range, now):0.0} °C",
+-            $"峰值 {ReportService.PeakTemp(data.Readings, _range, now):0.0} °C");
+-        var s3 = UiKit.Stat("峰值烟雾", $"{ReportService.PeakSmoke(data.Readings, _range, now):0} ppm",
++        var s2 = UiKit.Stat("平均温度", $"{readings.AverageTemp:0.0} °C",
++            $"峰值 {readings.PeakTemp:0.0} °C");
++        var s3 = UiKit.Stat("峰值烟雾", $"{readings.PeakSmoke:0} ppm",
+             $"预警阈值 {monitor.Settings.SmokeNoticePpm:0} ppm", UiKit.Level(AlarmLevel.Suspect));
+         Grid.SetColumn(s0, 0);
+         Grid.SetColumn(s1, 1);
+--- a/desktop/Services/MonitoringService.cs
++++ b/desktop/Services/MonitoringService.cs
+@@ -153,6 +153,7 @@
+ 
+     public void SetActiveBarn(string barnId)
+     {
++        if (ActiveBarnId == barnId) return;
+         ActiveBarnId = barnId;
+         Changed?.Invoke();
+     }
+--- a/desktop/Services/ReportService.cs
++++ b/desktop/Services/ReportService.cs
+@@ -100,6 +100,37 @@
+         return values.Count == 0 ? 0 : Math.Round(values.Max(), 0);
+     }
+ 
++    public readonly record struct ReadingStatistics(double AverageTemp, double PeakTemp, double PeakSmoke);
++
++    /// <summary>一次遍历计算报表采样指标，避免为三个指标重复筛选、分配临时列表。</summary>
++    public static ReadingStatistics SummarizeReadings(IEnumerable<SensorReading> readings, Range range, DateTime now)
++    {
++        ArgumentNullException.ThrowIfNull(readings);
++        var start = RangeStart(range, now);
++        DateTime? end = null;
++        long count = 0;
++        double totalTemp = 0;
++        var peakTemp = double.NaN;
++        var peakSmoke = double.NaN;
++
++        foreach (var reading in readings)
++        {
++            if (reading.Time < start) continue;
++            // 和原筛选保持相同短路顺序，只在遇到候选采样时计算上界。
++            end ??= now.AddMinutes(5);
++            if (reading.Time > end.Value) continue;
++
++            count++;
++            totalTemp += reading.TempC;
++            // 与 Enumerable.Max 一致：有数值时忽略 NaN，全为 NaN 时保留 NaN。
++            if (reading.TempC > peakTemp || double.IsNaN(peakTemp)) peakTemp = reading.TempC;
++            if (reading.SmokePpm > peakSmoke || double.IsNaN(peakSmoke)) peakSmoke = reading.SmokePpm;
++        }
++
++        return count == 0 ? default : new ReadingStatistics(
++            Math.Round(totalTemp / count, 1), Math.Round(peakTemp, 1), Math.Round(peakSmoke, 0));
++    }
++
+     /// <summary>导出报警记录 CSV（UTF-8 BOM，Excel 中文不乱码）。</summary>
+     public static string ExportAlarmsCsv(IEnumerable<AlarmRecord> alarms)
+     {
