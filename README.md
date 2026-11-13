@@ -2,11 +2,13 @@
 
 <img src="./assets/hero.svg" alt="anpeng-desktop" width="1000" />
 
-**草料棚不等人值班 —— 从发现到喷水，一条链在本地跑完。**
+**安棚农村草料棚智能火灾预警与初期喷淋系统 Windows 桌面端**
 
-[![stars](https://img.shields.io/github/stars/momoqiqi-qwq/anpeng-desktop?style=for-the-badge&color=f5c518&labelColor=2b2b2b)](https://github.com/momoqiqi-qwq/anpeng-desktop/stargazers) ![C#](https://img.shields.io/badge/C%23-512BD4?style=for-the-badge&logo=csharp&logoColor=white) ![WinUI 3](https://img.shields.io/badge/WinUI%203-0067C0?style=for-the-badge&logo=windows&logoColor=white) ![.NET 10](https://img.shields.io/badge/.NET%2010-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
+[![stars](https://img.shields.io/github/stars/momoqiqi-qwq/anpeng-desktop?style=for-the-badge&color=f5c518&labelColor=2b2b2b)](https://github.com/momoqiqi-qwq/anpeng-desktop/stargazers) ![C%23](https://img.shields.io/badge/C%23-68217A?style=for-the-badge&logo=dotnet&logoColor=white) ![Windows](https://img.shields.io/badge/Windows-0078D4?style=for-the-badge&logo=windows&logoColor=white)
 
 </div>
+
+---
 
 <details open>
 <summary><b>目录</b></summary>
