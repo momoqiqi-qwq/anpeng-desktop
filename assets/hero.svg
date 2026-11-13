@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="220" viewBox="0 0 1000 220" role="img" aria-label="anpeng-desktop">
+<defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#68217a" stop-opacity="0.10"/><stop offset="1" stop-color="#68217a" stop-opacity="0.02"/></linearGradient></defs>
+<rect width="1000" height="220" fill="#ffffff"/>
+<rect x="0" y="0" width="6" height="220" fill="#68217a"/>
+<rect x="688" y="30" width="264" height="160" rx="20" fill="url(#g)" stroke="#68217a" stroke-opacity="0.16"/>
+<circle cx="784" cy="80" r="46" fill="#68217a" fill-opacity="0.07"/>
+<circle cx="866" cy="142" r="60" fill="#68217a" fill-opacity="0.05"/>
+<text x="820" y="132" text-anchor="middle" font-family="Segoe UI, PingFang SC, Microsoft YaHei, Helvetica, Arial, sans-serif" font-size="70" font-weight="800" fill="#68217a" fill-opacity="0.30" letter-spacing="2">AD</text>
+<text x="48" y="104" font-family="Segoe UI, PingFang SC, Microsoft YaHei, Helvetica, Arial, sans-serif" font-size="46" font-weight="700" fill="#0f172a">anpeng-desktop</text>
+<rect x="48" y="130" width="72" height="4" rx="2" fill="#68217a"/>
+<text x="48" y="172" font-family="Segoe UI, PingFang SC, Microsoft YaHei, Helvetica, Arial, sans-serif" font-size="15" fill="#68217a" font-weight="600">C# / .NET</text>
+<text x="48" y="200" font-family="Segoe UI, PingFang SC, Microsoft YaHei, Helvetica, Arial, sans-serif" font-size="13" fill="#94a3b8">github.com/momoqiqi-qwq/anpeng-desktop</text>
+</svg>
